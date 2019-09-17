@@ -6,7 +6,7 @@ const server = express();
 
 server.use(express.json());
 
-server.use("/api/users", userRouter);
+server.use("/api/", userRouter);
 
 server.get("/", (req, res) => {
   res.status(200).send(`<h2>It's Working!</h2>`);
