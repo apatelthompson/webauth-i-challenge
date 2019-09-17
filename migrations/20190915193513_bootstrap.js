@@ -5,7 +5,7 @@ exports.up = function(knex) {
       .text("username", 128)
       .unique()
       .notNullable();
-    tbl.text("password").notNullable();
+    tbl.string("password", 128).notNullable();
   });
 };
 
