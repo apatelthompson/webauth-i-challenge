@@ -1,6 +1,6 @@
 const bcrypt = require("bcryptjs");
 
-const Users = require("../users/users-model.js");
+const Users = require("../users/userModel.js");
 
 module.exports = (req, res, next) => {
   let { username, password } = req.headers;
@@ -11,19 +11,10 @@ module.exports = (req, res, next) => {
       if (user && bcrypt.compareSync(password, user.password)) {
         next();
       } else {
-        res.status(401).json({ message: "You cannot pass!" });
+        res.status(401).json({ message: "Invalid credentials!" });
       }
     })
     .catch(error => {
       res.status(500).json(error);
     });
 };
-
-function fetch() {
-  const reqOptions = {
-    headers: {
-      username: "",
-      password: ""
-    }
-  };
-}

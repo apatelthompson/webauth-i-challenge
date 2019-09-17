@@ -1,6 +1,8 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
 
+const restricted = require("../auth/restricted-middleware.js");
+
 const Users = require("./userModel.js");
 
 const router = express.Router();
@@ -12,6 +14,7 @@ router.post("/login", (req, res) => {
     .first()
     .then(user => {
       if (user && bcrypt.compareSync(password, user.password)) {
+        req.session.user = user;
         res.status(200).json({ message: `Welcome ${user.username}` });
       } else {
         res.status(401).json({ message: "Invalid Credentials" });
@@ -54,25 +57,25 @@ router.get("/users", (req, res) => {
 //   res.send(`the hash for ${name} is ${hash}`);
 // });
 
-function restricted(req, res, next) {
-  const { username, password } = req.headers;
-
-  if (username && password) {
-    Users.findBy({ username })
-      .first()
-      .then(user => {
-        if (user && bcrypt.compareSync(password, user.password)) {
-          next();
-        } else {
-          res.status(401).json({ message: "Invalid Credentials" });
-        }
-      })
-      .catch(error => {
-        res.status(500).json({ message: "Unexpected error" });
-      });
-  } else {
-    res.status(400).json({ message: "No credentials provided" });
-  }
-}
+// function restricted(req, res, next) {
+//   const { username, password } = req.headers;
+//
+//   if (username && password) {
+//     Users.findBy({ username })
+//       .first()
+//       .then(user => {
+//         if (user && bcrypt.compareSync(password, user.password)) {
+//           next();
+//         } else {
+//           res.status(401).json({ message: "Invalid Credentials" });
+//         }
+//       })
+//       .catch(error => {
+//         res.status(500).json({ message: "Unexpected error" });
+//       });
+//   } else {
+//     res.status(400).json({ message: "No credentials provided" });
+//   }
+// }
 
 module.exports = router;
