@@ -23,6 +23,20 @@ router.post("/login", (req, res) => {
     });
 });
 
+router.get("/logout", (req, res) => {
+  if (req.session) {
+    req.session.destroy(err => {
+      if (err) {
+        res.json({ message: "error" });
+      } else {
+        res.status(200).json({ message: "goodbye" });
+      }
+    });
+  } else {
+    res.status(200).json({ message: "nevermind" });
+  }
+});
+
 router.post("/register", (req, res) => {
   let { username, password } = req.body;
 
